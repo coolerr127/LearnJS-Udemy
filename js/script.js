@@ -64,10 +64,10 @@ const personalMovieDB = {
     }
 };
 
-personalMovieDB.start();
-personalMovieDB.rememberMyFilms();
-personalMovieDB.detectPersonalLevel();
-personalMovieDB.showMyDB(personalMovieDB.private);
-personalMovieDB.toggleVisibleMyDB(personalMovieDB.privat);
-personalMovieDB.writeYourGenres();
-console.log(personalMovieDB);
+// personalMovieDB.start();
+// personalMovieDB.rememberMyFilms();
+// personalMovieDB.detectPersonalLevel();
+// personalMovieDB.showMyDB(personalMovieDB.private);
+// personalMovieDB.toggleVisibleMyDB(personalMovieDB.privat);
+// personalMovieDB.writeYourGenres();
+// console.log(personalMovieDB);
