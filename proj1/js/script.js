@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    //-----Tabs-----
+    //=====Tabs=====
 
     const tabs = document.querySelectorAll('.tabheader__item'),
         tabsContent = document.querySelectorAll('.tabcontent'),
@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    //-----Timer-----
+    //=====Timer=====
 
     const deadline = '2021-06-15';
     
@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setClock('.timer', deadline);
 
-    //-----Modal-----
+    //=====Modal=====
 
     const modalTrigger = document.querySelectorAll('[data-modal]'),
           modal = document.querySelector('.modal');
@@ -139,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.addEventListener('scroll', showModalByScroll);
 
-    //-----MenuCards-----
+    //=====MenuCards=====
 
     class MenuCard {
         constructor(src, alt, title, descr, price, parentSelector, ...classes) {
@@ -180,32 +180,32 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // const getResource = async (url) => {
-    //     const res = await fetch(url);
+    const getResource = async (url) => {
+        const res = await fetch(url);
 
-    //     if (!res.ok) {
-    //         throw new Error(`Could not fetch ${url}, status: ${res.status}`);
-    //     }
+        if (!res.ok) {
+            throw new Error(`Could not fetch ${url}, status: ${res.status}`);
+        }
 
-    //     return await res.json();
-    // };
+        return await res.json();
+    };
 
-    // getResource('http://localhost:3000/menu')
-    // .then(data => {
-    //     data.forEach(({img, altimg, title, descr, price}) => {
-    //         new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
-    //     });
-    // });
-
-    // Испльзуем библиотеку axios(подключена через CDN)
-    axios.get('http://localhost:3000/menu')
+    getResource('http://localhost:3000/menu')
     .then(data => {
-        data.data.forEach(({img, altimg, title, descr, price}) => {
+        data.forEach(({img, altimg, title, descr, price}) => {
             new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
         });
     });
 
-    // Без использования класса
+    //-----Испльзуем библиотеку axios(подключена через CDN)-----
+    // axios.get('http://localhost:3000/menu')
+    // .then(data => {
+    //     data.data.forEach(({img, altimg, title, descr, price}) => {
+    //         new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
+    //     });
+    // });
+
+    //-----Без использования класса-----
     // getResource('http://localhost:3000/menu')
     //     .then(data => createCard(data));
 
@@ -229,7 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
     //     });
     // }
 
-    //-----Forms-----
+    //=====Forms=====
 
     const forms = document.querySelectorAll('form');
     const message = {
@@ -266,7 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const formData = new FormData(form);
 
-            //конвертируем FormData в JSON и отправляем
+            //-----конвертируем FormData в JSON и отправляем-----
             const json = JSON.stringify(Object.fromEntries(formData.entries()));
 
             postData('http://localhost:3000/requests', json)
@@ -308,4 +308,53 @@ document.addEventListener('DOMContentLoaded', () => {
             closeModal();
         }, 1000);
     }
+
+    //=====Slider=====
+
+    const slides = document.querySelectorAll('.offer__slide'),
+          prevBtn = document.querySelector('.offer__slider-prev'),
+          nextBtn = document.querySelector('.offer__slider-next'),
+          total = document.querySelector('#total'),
+          current = document.querySelector('#current');
+
+    let slideIdx = 1;
+
+    showSlide(slideIdx);
+
+    if (slides.length < 10) {
+        total.textContent = `0${slides.length}`;
+    } else {
+        total.textContent = slides.length;
+    }
+
+    function showSlide(idx) {
+        if (idx > slides.length) {
+            slideIdx = 1;
+        } else if (idx < 1) {
+            slideIdx = slides.length;
+        }
+
+        slides.forEach(item => item.classList.add('hide'));
+
+        slides[slideIdx - 1].classList.add('show');
+        slides[slideIdx - 1].classList.remove('hide');
+
+        if (slides.length < 10) {
+            current.textContent = `0${slideIdx}`;
+        } else {
+            current.textContent = slideIdx;
+        }
+    }
+
+    function changeSlide(n) {
+        showSlide(slideIdx += n);
+    }
+
+    prevBtn.addEventListener('click', () => {
+        changeSlide(-1);
+    });
+
+    nextBtn.addEventListener('click', () => {
+        changeSlide(1);
+    });
 });
