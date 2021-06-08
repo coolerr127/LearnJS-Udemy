@@ -312,6 +312,7 @@ document.addEventListener('DOMContentLoaded', () => {
     //=====Slider=====
 
     const slides = document.querySelectorAll('.offer__slide'),
+          slider = document.querySelector('.offer__slider'),
           prevBtn = document.querySelector('.offer__slider-prev'),
           nextBtn = document.querySelector('.offer__slider-next'),
           total = document.querySelector('#total'),
@@ -330,6 +331,30 @@ document.addEventListener('DOMContentLoaded', () => {
     slidesField.style.transition = '0.5s all';
     slidesWrapper.style.overflow = 'hidden';
     slides.forEach(slide => {slide.style.width = width;});
+
+    function changeDot() {
+        dots.forEach(dot => dot.style.opacity = 0.5);
+        dots[slideIdx - 1].style.opacity = 1;
+    }
+
+    slider.style.position = 'relative';
+
+    const indicators = document.createElement('ol'),
+          dots = [];
+
+    indicators.classList.add('carousel-indicators');
+    slider.append(indicators);
+
+    for (let i = 0; i <slides.length; i++) {
+        const dot = document.createElement('li');
+        dot.setAttribute('data-slide-to', i + 1);
+        dot.classList.add('dot');
+        if (i === 0) {
+            dot.style.opacity = 1;
+        }
+        indicators.append(dot);
+        dots.push(dot);
+    }
 
     if (slides.length < 10) {
         total.textContent = `0${slides.length}`;
@@ -359,6 +384,8 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             current.textContent = slideIdx;
         }
+
+        changeDot();
     });
 
     prevBtn.addEventListener('click', () => {
@@ -381,6 +408,27 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             current.textContent = slideIdx;
         }
+
+        changeDot();
+    });
+
+    dots.forEach(dot => {
+        dot.addEventListener('click', (e) => {
+            const slideTo = e.target.getAttribute('data-slide-to');
+
+            slideIdx = slideTo;
+            offset = +width.slice(0, width.length - 2) * (slideTo - 1);
+
+            slidesField.style.transform = `translateX(-${offset}px)`;
+
+            if (slides.length < 10) {
+                current.textContent =  `0${slideIdx}`;
+            } else {
+                current.textContent =  slideIdx;
+            }
+
+            changeDot();
+        });
     });
 
     //-----Variant 1-----
