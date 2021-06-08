@@ -93,3 +93,17 @@ const newArr = Object.entries(obj)
 .filter(item => item[1] === 'person')
 .map(item => item[0]);
 console.log(newArr);
+
+//=====LOCALSTORAGE=====
+
+// localStorage.setItem('test', 'test');
+// console.log(localStorage.getItem('test'));
+// localStorage.removeItem('');
+// localStorage.clear();
+
+const person = {
+    Name: 'Anton',
+    Age: 21
+};
+// localStorage.setItem('Anton', JSON.stringify(person));
+console.log(JSON.parse(localStorage.getItem('Anton')));
