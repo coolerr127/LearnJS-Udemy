@@ -324,6 +324,47 @@ document.addEventListener('DOMContentLoaded', () => {
     let slideIdx = 1;
     let offset = 0;
 
+    //-----Variant 1-----
+    
+    // showSlide(slideIdx);
+
+    // if (slides.length < 10) {
+    //     total.textContent = `0${slides.length}`;
+    // } else {
+    //     total.textContent = slides.length;
+    // }
+
+    // function showSlide(idx) {
+    //     if (idx > slides.length) {
+    //         slideIdx = 1;
+    //     } else if (idx < 1) {
+    //         slideIdx = slides.length;
+    //     }
+
+    //     slides.forEach(item => item.classList.add('hide'));
+
+    //     slides[slideIdx - 1].classList.add('show');
+    //     slides[slideIdx - 1].classList.remove('hide');
+
+    //     if (slides.length < 10) {
+    //         current.textContent = `0${slideIdx}`;
+    //     } else {
+    //         current.textContent = slideIdx;
+    //     }
+    // }
+
+    // function changeSlide(n) {
+    //     showSlide(slideIdx += n);
+    // }
+
+    // prevBtn.addEventListener('click', () => {
+    //     changeSlide(-1);
+    // });
+
+    // nextBtn.addEventListener('click', () => {
+    //     changeSlide(1);
+    // });
+
     //-----Variant 2-----
 
     slidesField.style.width = 100 * slides.length + '%';
@@ -434,54 +475,53 @@ document.addEventListener('DOMContentLoaded', () => {
             changeDot();
         });
     });
-
-    //-----Variant 1-----
     
-    // showSlide(slideIdx);
-
-    // if (slides.length < 10) {
-    //     total.textContent = `0${slides.length}`;
-    // } else {
-    //     total.textContent = slides.length;
-    // }
-
-    // function showSlide(idx) {
-    //     if (idx > slides.length) {
-    //         slideIdx = 1;
-    //     } else if (idx < 1) {
-    //         slideIdx = slides.length;
-    //     }
-
-    //     slides.forEach(item => item.classList.add('hide'));
-
-    //     slides[slideIdx - 1].classList.add('show');
-    //     slides[slideIdx - 1].classList.remove('hide');
-
-    //     if (slides.length < 10) {
-    //         current.textContent = `0${slideIdx}`;
-    //     } else {
-    //         current.textContent = slideIdx;
-    //     }
-    // }
-
-    // function changeSlide(n) {
-    //     showSlide(slideIdx += n);
-    // }
-
-    // prevBtn.addEventListener('click', () => {
-    //     changeSlide(-1);
-    // });
-
-    // nextBtn.addEventListener('click', () => {
-    //     changeSlide(1);
-    // });
-
     //=====CALCULATOR=====
 
     const result = document.querySelector('.calculating__result span');
-    let sex = 'female', 
-        height, weight, age, 
+    let sex, height, weight, age, ratio;
+
+    if (localStorage.getItem('sex')) {
+        sex = localStorage.getItem('sex');
+    } else {
+        sex = 'female';
+        localStorage.setItem('sex', 'female');
+    }
+    if (localStorage.getItem('ratio')) {
+        ratio = localStorage.getItem('ratio');
+    } else {
         ratio = 1.375;
+        localStorage.setItem('ratio', 1.375);
+    }
+    if (localStorage.getItem('height')) {
+        height = localStorage.getItem('height');
+        document.querySelector('#height').value = height;
+    }
+    if (localStorage.getItem('weight')) {
+        weight = localStorage.getItem('weight');
+        document.querySelector('#weight').value = weight;
+    }
+    if (localStorage.getItem('age')) {
+        age = localStorage.getItem('age');
+        document.querySelector('#age').value = age;
+    }
+
+    function initLocalSettings(selector, activeClass) {
+        const elements = document.querySelectorAll(selector);
+
+        elements.forEach(elem => {
+            elem.classList.remove(activeClass);
+            if (elem.getAttribute('id') === localStorage.getItem('sex')) {
+                elem.classList.add(activeClass);
+            }
+            if (elem.getAttribute('data-ratio') === localStorage.getItem('ratio')) {
+                elem.classList.add(activeClass);
+            }
+        });
+    }
+
+    initLocalSettings('#gender div', 'calculating__choose-item_active');
+    initLocalSettings('.calculating__choose_big div', 'calculating__choose-item_active');
 
     function calcTotal() {
         if (!sex || !height || !weight || !age || !ratio) {
@@ -498,15 +538,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     calcTotal();
 
-    function getStaticInformation(parentSelector, activeClass) {
-        const elements = document.querySelectorAll(`${parentSelector} div`);
+    function getStaticInformation(selector, activeClass) {
+        const elements = document.querySelectorAll(selector);
 
         elements.forEach((elem) => {
             elem.addEventListener('click', (e) => {
                 if (e.target.getAttribute('data-ratio')) {
                     ratio = +e.target.getAttribute('data-ratio');
+                    localStorage.setItem('ratio', ratio);
                 } else {
                     sex = e.target.getAttribute('id');
+                    localStorage.setItem('sex', sex);
                 }
     
                 elements.forEach(elem => {
@@ -519,22 +561,32 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    getStaticInformation('#gender', 'calculating__choose-item_active');
-    getStaticInformation('.calculating__choose_big', 'calculating__choose-item_active');
+    getStaticInformation('#gender div', 'calculating__choose-item_active');
+    getStaticInformation('.calculating__choose_big div', 'calculating__choose-item_active');
 
     function getDynamicInformation(selector) {
         const input = document.querySelector(selector);
 
         input.addEventListener('input', () => {
+
+            if (input.value.match(/\D/g)) {
+                input.style.border = '1px solid red';
+            } else {
+                input.style.border = 'none';
+            }
+
             switch(input.getAttribute('id')) {
                 case "height":
                     height = +input.value;
+                    localStorage.setItem('height', height);
                     break;
                 case "weight":
                     weight = +input.value;
+                    localStorage.setItem('weight', weight);
                     break;
                 case "age":
                     age = +input.value;
+                    localStorage.setItem('age', age);
                     break;
             }
 
