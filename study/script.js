@@ -185,3 +185,20 @@ const reg = /n/i;
 // ivan.surname = 'haha'
 // console.log(ivan.surname);
 // ivan.say();
+
+//=====TRY CATCH=====
+
+// try {
+//     console.log('normal');
+//     console.log(a);
+//     console.log('result');
+// } catch(error) {
+//     console.log(error);
+//     console.log(error.name);
+//     console.log(error.message);
+//     console.log(error.stack);
+// } finally {
+//     console.log('End');
+// }
+
+// console.log('Still normal');
